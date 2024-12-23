@@ -1,0 +1,51 @@
+pip install python-binance ccxt pandas
+
+from binance.client import Client
+import time
+
+# Credenciais da Binance Testnet
+API_KEY = 'SUA_API_KEY_TESTNET'
+API_SECRET = 'SEU_SECRET_KEY_TESTNET'
+
+# Configuração do cliente para Testnet
+client = Client(API_KEY, API_SECRET)
+client.API_URL = 'https://testnet.binance.vision/api'
+
+# Função para verificar saldo
+def check_balance():
+    try:
+        account = client.get_account()
+        print("\nSaldo disponível na Testnet:")
+        for balance in account['balances']:
+            if float(balance['free']) > 0:
+                print(f"{balance['asset']}: {balance['free']}")
+    except Exception as e:
+        print(f"Erro ao verificar saldo: {e}")
+
+# Função para realizar uma compra
+def buy_crypto(symbol, quantity):
+    try:
+        order = client.create_order(
+            symbol=symbol,
+            side='BUY',
+            type='MARKET',
+            quantity=quantity
+        )
+        print(f"\nOrdem de COMPRA executada com sucesso: {order}")
+    except Exception as e:
+        print(f"Erro ao comprar: {e}")
+
+# Função principal
+def run_bot():
+    print("Conectando ao Binance Testnet...")
+    time.sleep(2)
+    check_balance()
+
+    print("\nTentando comprar 0.001 BTC...")
+    buy_crypto('BTCUSDT', 0.001)
+
+    print("\nSaldo após a compra:")
+    check_balance()
+
+if __name__ == "__main__":
+    run_bot()
